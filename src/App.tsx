@@ -1,10 +1,12 @@
-import Playground from './components/playground'
-import './App.css';
+import Playground from "./components/playground";
+import "./App.css";
+import { PlaygroundProvider } from "./components/playground/Provider";
 function App() {
-
   return (
-   <Playground />
-  )
+    <PlaygroundProvider>
+      <Playground />
+    </PlaygroundProvider>
+  );
 }
 
-export default App
+export default App;

@@ -1,26 +1,24 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
-
-import React from 'react'
-import FileNameList from './FileNameList'
-import Editor from './Editor'
+import React, { useContext } from "react";
+import FileNameList from "./FileNameList";
+import Editor from "./Editor";
+import { PlayGroundContext } from "../playground/Context";
+import { debounce } from "lodash-es";
 
 const CodeEditor = () => {
+  const { files, setFiles, selectedFileName } = useContext(PlayGroundContext);
 
-const file = {
-  name: 'demo.tsx',
-  value: "import lodash from 'lodash'; \n\n const a = <div>hello</div>",
-  language: 'typescript'
-}
+  const file = files[selectedFileName];
 
-function onEditorChange(...rest:any[]) {
-  console.log(rest)
-}
+  function onEditorChange(value?: string) {
+    files[file.name].value = value!;
+    setFiles({ ...files });
+  }
   return (
-    <div className='flex flex-col h-full'>
+    <div className="flex flex-col h-full">
       <FileNameList />
-      <Editor file={file} onChange={onEditorChange} />
+      <Editor file={file} onChange={debounce(onEditorChange, 500)} />
     </div>
-  )
-}
+  );
+};
 
-export default CodeEditor
+export default CodeEditor;
