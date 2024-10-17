@@ -1,6 +1,6 @@
 import { createContext } from "react"
 
-interface File {
+export interface File {
   name: string
   value: string
   language: string
