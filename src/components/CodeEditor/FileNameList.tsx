@@ -1,10 +1,4 @@
-import React, {
-  MouseEventHandler,
-  useContext,
-  useEffect,
-  useRef,
-  useState,
-} from "react";
+import React, { useContext, useEffect, useRef, useState } from "react";
 import { PlayGroundContext } from "../playground/Context";
 import { cn } from "../../libs/classnames";
 import "./index.modules.css";
@@ -16,7 +10,7 @@ interface FileNameItemProps {
   readonly: boolean;
   onClick: () => void;
   onEditComplete: (name: string) => void;
-  onRemove: MouseEventHandler;
+  onRemove: () => void;
 }
 
 const FileNameItem: React.FC<FileNameItemProps> = (props) => {
@@ -46,6 +40,13 @@ const FileNameItem: React.FC<FileNameItemProps> = (props) => {
     onEditComplete(name);
   };
 
+  const handleRemove = () => {
+    const isComfirmedRemove = window.confirm(
+      `Are you sure you want to delete ${name}?`
+    );
+    if (isComfirmedRemove) onRemove();
+  };
+
   useEffect(() => {
     if (creating) inputRef.current?.focus();
   }, [creating]);
@@ -72,7 +73,13 @@ const FileNameItem: React.FC<FileNameItemProps> = (props) => {
             {name}
           </span>
           {!readonly ? (
-            <span style={{ marginLeft: 5, display: "flex" }} onClick={onRemove}>
+            <span
+              style={{ marginLeft: 5, display: "flex" }}
+              onClick={(e) => {
+                e.stopPropagation();
+                handleRemove();
+              }}
+            >
               <svg width="12" height="12" viewBox="0 0 24 24">
                 <line stroke="#999" x1="18" y1="6" x2="6" y2="18"></line>
                 <line stroke="#999" x1="6" y1="6" x2="18" y2="18"></line>
@@ -118,7 +125,6 @@ const FileNameList = () => {
     setSelectedFileName(ENTRY_FILE_NAME);
   };
 
-
   return (
     <div className="tabs flex items-center h-9 overflow-x-auto overflow-y-hidden border-b box-border text-neutral-900 bg-white">
       {tabs.map((item, index, arr) => (
@@ -129,10 +135,7 @@ const FileNameList = () => {
           creating={creating && index === arr.length - 1}
           checked={selectedFileName === item}
           onClick={() => setSelectedFileName(item)}
-          onRemove={(e) => {
-            e.stopPropagation();
-            handleRemove(item);
-          }}
+          onRemove={() => handleRemove(item)}
           onEditComplete={(name) => handleEditComplete(name, item)}
         />
       ))}
