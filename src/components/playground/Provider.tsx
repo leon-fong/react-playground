@@ -2,11 +2,12 @@ import { PropsWithChildren, useEffect, useState } from "react";
 import { Files, PlayGroundContext } from "./Context";
 import { fileName2Language } from "../../libs/file";
 import { initFiles } from "./files";
+import { compress, uncompress } from "../../libs/fflate";
 
 const getFilesFromUrl = () => {
   let files: Files | undefined;
   try {
-    const hash = decodeURIComponent(window.location.hash.slice(1));
+    const hash = uncompress(window.location.hash.slice(1));
     files = JSON.parse(hash);
   } catch (error) {
     console.error(error);
@@ -58,8 +59,8 @@ export const PlaygroundProvider = (props: PropsWithChildren) => {
   }
 
   useEffect(() => {
-    const hash = JSON.stringify(files);
-    window.location.hash = encodeURIComponent(hash);
+    const hash = compress(JSON.stringify(files));
+    window.location.hash = hash
   }, [files]);
 
   return (
