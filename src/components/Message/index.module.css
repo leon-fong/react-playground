@@ -1,0 +1,8 @@
+.error {
+  --color: #f56c6c;
+  --bg-color: #fef0f0;
+}
+.warn {
+  --color: #e6a23c;
+  --bg-color: #fdf6ec;
+}
