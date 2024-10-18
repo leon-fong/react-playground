@@ -1,11 +1,24 @@
-import { PropsWithChildren, useState } from "react";
+import { PropsWithChildren, useEffect, useState } from "react";
 import { Files, PlayGroundContext } from "./Context";
 import { fileName2Language } from "../../libs/file";
 import { initFiles } from "./files";
+
+const getFilesFromUrl = () => {
+  let files: Files | undefined;
+  try {
+    const hash = decodeURIComponent(window.location.hash.slice(1));
+    files = JSON.parse(hash);
+  } catch (error) {
+    console.error(error);
+  }
+
+  return files;
+};
+
 export const PlaygroundProvider = (props: PropsWithChildren) => {
   const { children } = props;
 
-  const [files, setFiles] = useState<Files>(initFiles);
+  const [files, setFiles] = useState<Files>(getFilesFromUrl() || initFiles);
   const [selectedFileName, setSelectedFileName] = useState("App.tsx");
 
   function addFile(name: string) {
@@ -43,6 +56,11 @@ export const PlaygroundProvider = (props: PropsWithChildren) => {
       ...newFile,
     });
   }
+
+  useEffect(() => {
+    const hash = JSON.stringify(files);
+    window.location.hash = encodeURIComponent(hash);
+  }, [files]);
 
   return (
     <PlayGroundContext.Provider
