@@ -1,7 +1,7 @@
 import React, { useContext, useEffect, useRef, useState } from "react";
 import { PlayGroundContext } from "../playground/Context";
 import { cn } from "../../libs/classnames";
-import "./index.modules.css";
+import styles from  "./index.module.css";
 import { ENTRY_FILE_NAME, readonlyFileNames } from "../playground/files";
 interface FileNameItemProps {
   value: string;
@@ -126,7 +126,7 @@ const FileNameList = () => {
   };
 
   return (
-    <div className="tabs flex items-center h-9 overflow-x-auto overflow-y-hidden border-b box-border text-neutral-900 bg-white">
+    <div className={cn('flex items-center h-9 overflow-x-auto overflow-y-hidden border-b box-border text-neutral-900 bg-white', styles.tabs)}>
       {tabs.map((item, index, arr) => (
         <FileNameItem
           key={item + index}
