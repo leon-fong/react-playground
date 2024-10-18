@@ -5,15 +5,16 @@ import "./index.modules.css";
 interface FileNameItemProps {
   value: string;
   checked: boolean;
+  creating: boolean;
   onClick: () => void;
   onEditComplete: (name: string) => void;
 }
 
 const FileNameItem: React.FC<FileNameItemProps> = (props) => {
-  const { value, checked, onClick, onEditComplete } = props;
+  const { value, checked, creating, onClick, onEditComplete } = props;
 
   const [name, setName] = useState(value);
-  const [editing, setEditing] = useState(false);
+  const [editing, setEditing] = useState(creating);
   const inputRef = useRef<HTMLInputElement>(null);
 
   const handleDoubleClick = () => {
@@ -27,6 +28,10 @@ const FileNameItem: React.FC<FileNameItemProps> = (props) => {
     setEditing(false);
     onEditComplete(name);
   };
+
+  useEffect(() => {
+    if (creating) inputRef.current?.focus();
+  }, [creating]);
 
   return (
     <div
@@ -52,10 +57,16 @@ const FileNameItem: React.FC<FileNameItemProps> = (props) => {
 };
 
 const FileNameList = () => {
-  const { files, selectedFileName, setSelectedFileName, updateFileName } =
-    useContext(PlayGroundContext);
+  const {
+    files,
+    selectedFileName,
+    addFile,
+    setSelectedFileName,
+    updateFileName,
+  } = useContext(PlayGroundContext);
 
   const [tabs, setTabs] = useState([""]);
+  const [creating, setCreating] = useState(false);
 
   useEffect(() => {
     setTabs(Object.keys(files));
@@ -64,19 +75,29 @@ const FileNameList = () => {
   const handleEditComplete = (name: string, preName: string) => {
     updateFileName(preName, name);
     setSelectedFileName(name);
+    setCreating(false);
+  };
+
+  const addTab = () => {
+    addFile("Comp" + Math.random().toString().slice(2, 8) + ".tsx");
+    setCreating(true);
   };
 
   return (
     <div className="tabs flex items-center h-9 overflow-x-auto overflow-y-hidden border-b box-border text-neutral-900 bg-white">
-      {tabs.map((item, index) => (
+      {tabs.map((item, index, arr) => (
         <FileNameItem
           key={item + index}
           value={item}
+          creating={creating && index === arr.length - 1}
           checked={selectedFileName === item}
           onClick={() => setSelectedFileName(item)}
           onEditComplete={(name) => handleEditComplete(name, item)}
         />
       ))}
+      <div className="cursor-pointer flex items-center justify-center py-0 px-2 hover:bg-neutral-200" onClick={addTab}>
+        +
+      </div>
     </div>
   );
 };
