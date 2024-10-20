@@ -8,6 +8,7 @@ const Playground = () => {
   return (
     <div style={{ height: "100vh" }}>
       <Header />
+      <main className="!h-[calc(100%-50px)]">
       <Allotment defaultSizes={[100, 100]}>
         <Allotment.Pane minSize={500}>
           <CodeEditor />
@@ -15,7 +16,8 @@ const Playground = () => {
         <Allotment.Pane minSize={0}>
           <Preview />
         </Allotment.Pane>
-      </Allotment>
+      </Allotment> 
+      </main>
     </div>
   );
 };
