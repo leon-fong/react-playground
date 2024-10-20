@@ -42,8 +42,7 @@ const Preview = () => {
   useEffect(() => {
     if (!compilerWorkerRef.current) {
       compilerWorkerRef.current = new CompilerWorker();
-      compilerWorkerRef.current?.addEventListener("message", (data) => {
-        console.log("worker", data);
+      compilerWorkerRef.current?.addEventListener("message", ({ data }) => {
         if (data.type === "COMPILED_CODE") {
           setCompiledCode(data.data);
         } else {
@@ -74,12 +73,12 @@ const Preview = () => {
       <iframe src={iframeUrl} className="w-full h-full p-0 border-none" />
       <Message type="error" content={error} />
       {/* <Editor
-        file={{
-          name: "dist.js",
-          language: "javascript",
-          value: compiledCode,
-        }}
-      /> */}
+      file={{
+        name: "dist.js",
+        language: "javascript",
+        value: compiledCode,
+      }}
+    /> */}
     </div>
   );
 };
